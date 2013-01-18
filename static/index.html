@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <title>The Dodgy Voter</title>
+  <link href="/sources/bootstrap.css" rel="stylesheet" type="text/css" />
+  <link href="/styles/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <h1 id="page-title">(in)Validating Your Ideas</h1>
+    <form class="form-inline submission-form" action="javascript:window.submitAction(); return false;">
+      <input type="text" id="submission-box" class="input-xlarge" placeholder="Enter your project"/>
+      <button id="submission-button" class="btn">submit</button>
+    </form>
+
+    <div id="submission-wrapper">
+      <ul id="submission-list">
+
+      </ul>
+    </div>
+
+
+
+  </div>
+
+  <script src="/sources/jquery.js" type="text/javascript"></script>
+  <script src="/sources/timeago.js" type="text/javascript"></script>
+  <script src="/sources/realtime.js" type="text/javascript"></script>
+  <script src="/sources/interaction.js" type="text/javascript"></script>
+  <script src="http://localhost:8001/socket.io/socket.io.js"></script>
+  <!-- <script src="http://signin.startlabs.org:8001/socket.io/socket.io.js"></script> -->
+
+</body>
+</html>

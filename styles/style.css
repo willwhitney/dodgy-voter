@@ -1,0 +1,73 @@
+#submission-wrapper ul {
+  list-style: none;
+}
+
+#submission-wrapper ul li {
+  list-style-type: none;
+}
+
+.wrapper {
+  position: absolute;
+  width: 1040px;
+  left: 50%;
+  margin-left: -520px;
+}
+
+.submission-form {
+  margin-top: 50px;
+}
+
+#submission-box {
+  width: 500px;
+}
+
+#submission-button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.submission-row {
+  margin: 20px;
+}
+
+.arrows {
+  display: inline-block;
+  width: 30px;
+  margin-right: 10px;
+}
+
+.up-arrow {
+  width: 30px;
+  height: 15px;
+  background-image: url('/static/up_arrow.png');
+  background-size: 100% 100%;
+}
+
+.up-arrow.selected {
+  background-image: url('/static/up_arrow_selected.png');
+}
+
+.down-arrow {
+  width: 30px;
+  height: 15px;
+  background-image: url('/static/down_arrow.png');
+  background-size: 100% 100%;
+}
+
+.down-arrow.selected {
+  background-image: url('/static/down_arrow_selected.png');
+}
+
+.score {
+  text-align: center;
+}
+
+.submission-title {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+}
