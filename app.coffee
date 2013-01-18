@@ -14,7 +14,7 @@ io.configure ->
   
 server.listen port
 
-submissions = [{id: 0, title: "F1!RST!!!", upvotes: 3, downvotes: 1}]
+submissions = []
 
 io.sockets.on 'connection', (socket) ->
   socket.emit 'listing', submissions
