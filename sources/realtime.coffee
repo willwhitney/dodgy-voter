@@ -1,7 +1,8 @@
 window.vote_lock = false
 $ ->
   window.submissions = []
-  socket = io.connect("http://localhost:8001")
+  socket = io.connect("/")
+  socket = io.connect()
 
   socket.on "listing", (data) ->
     console.log data
@@ -19,8 +20,30 @@ $ ->
     for s in window.submissions
       if s.id == submission.id
         window.submissions.splice(window.submissions.indexOf(s), 1)
-        window.submissions.push(submission)
+        break
+    window.submissions.push(submission)
     console.log "update received"
+    console.log window.submissions
+    buildPage()
+
+  socket.on 'created', (submission) ->
+    for s in window.submissions
+      if s.id == submission.id
+        window.submissions.splice(window.submissions.indexOf(s), 1)
+        break
+    window.submissions.push(submission)
+    window.created[submission.id] = true
+    window.localStorage['created'] = JSON.stringify(window.created)
+    console.log "created received"
+    console.log window.submissions
+    buildPage()
+
+  socket.on 'remove', (submission) ->
+    for s in window.submissions
+      if s.id == submission.id
+        window.submissions.splice(window.submissions.indexOf(s), 1)
+        break
+    console.log "remove received"
     console.log window.submissions
     buildPage()
 
@@ -33,10 +56,10 @@ $ ->
   #   console.log window.submissions
   #   buildPage()
 
-  socket.on 'error', (data) ->
-    console.error "Error received: "
-    console.error data
-    alert "An error occurred. Please reload."
+  # socket.on 'error', (data) ->
+  #   console.error "Error received: "
+  #   console.error data
+  #   alert "An error occurred. Please reload."
 
   buildPage = ->
     window.vote_lock = true
@@ -63,9 +86,13 @@ $ ->
       upvoted_selected_string = " selected"
     else if window.votes[submission.id]? and window.votes[submission.id] < 0
       downvoted_selected_string = " selected"
+    remove_string = ""
+    if window.created[submission.id]?
+      remove_string = """<div class="remove">x</div>"""
     
     """
     <li id='""" + submission.id + """' class="submission-row">
+      """ + remove_string + """
       <div class="arrows">
         <div class='up-arrow""" + upvoted_selected_string + """'></div>
         <div class="score">""" + (submission.upvotes - submission.downvotes) + """</div>
@@ -94,6 +121,10 @@ $ ->
     window.votes[submission.id] = -1
     window.localStorage['votes'] = JSON.stringify(window.votes)
     socket.emit 'downvote', submission
+
+  window.remove = (submission) ->
+    window.created[submission.id] = undefined
+    socket.emit 'remove', submission
 
   window.submit = (submission_title) ->
     socket.emit 'submit', {

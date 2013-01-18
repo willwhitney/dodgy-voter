@@ -1,4 +1,5 @@
 #submission-wrapper ul {
+  margin-left: -40px;
   list-style: none;
 }
 
@@ -13,12 +14,16 @@
   margin-left: -520px;
 }
 
+#page-title {
+  text-align: center;
+}
+
 .submission-form {
   margin-top: 50px;
 }
 
 #submission-box {
-  width: 500px;
+  width: 91%;
 }
 
 #submission-button {
@@ -32,6 +37,23 @@
 
 .submission-row {
   margin: 20px;
+  position: relative;
+}
+
+.remove {
+  position: absolute;
+  left: -30px;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  background-color: red;
+  border-radius: 50%;
+  color: white;
+  line-height: 100%;
+  text-align: center;
+  margin-top: 17px;
+  cursor: hand;
+  cursor: pointer;
 }
 
 .arrows {
@@ -70,4 +92,5 @@
   display: inline-block;
   font-size: 20px;
   font-weight: bold;
+  max-width: 90%;
 }

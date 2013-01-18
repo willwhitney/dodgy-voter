@@ -7,8 +7,8 @@ app = express()
 server = require('http').createServer(app)
 
 port = 8000
-io = io.listen 8001, { log: true }
-app.listen port
+io = io.listen server, { log: true }
+server.listen port
 
 submissions = [{id: 0, title: "F1!RST!!!", upvotes: 3, downvotes: 1}]
 
@@ -22,7 +22,7 @@ io.sockets.on 'connection', (socket) ->
     submission.downvotes = 0
     submissions.push submission
     socket.broadcast.emit 'new-submission', submission
-    socket.emit 'new-submission', submission
+    socket.emit 'created', submission
 
   socket.on 'upvote', (submission) ->
     console.log 'upvoted: ' 
@@ -87,6 +87,18 @@ io.sockets.on 'connection', (socket) ->
     goldSubmission.downvotes--
     # socket.broadcast.emit 'update', goldSubmission
     # socket.emit 'update', goldSubmission
+
+  socket.on 'remove', (submission) ->
+    console.log 'removed: '
+    console.log submission
+
+    for s in submissions
+      if s.id == submission.id
+        submissions.splice(submissions.indexOf(s), 1)
+        break
+
+    socket.broadcast.emit 'remove', submission
+    socket.emit 'remove', submission
 
 
 app.configure ->

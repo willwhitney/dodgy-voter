@@ -6,7 +6,8 @@
   $(function() {
     var addSubmissionToPage, buildPage, buildRow, dedownvote, deupvote, socket;
     window.submissions = [];
-    socket = io.connect("http://localhost:8001");
+    socket = io.connect("/");
+    socket = io.connect();
     socket.on("listing", function(data) {
       console.log(data);
       window.submissions = data;
@@ -31,17 +32,44 @@
         s = _ref[_i];
         if (s.id === submission.id) {
           window.submissions.splice(window.submissions.indexOf(s), 1);
-          window.submissions.push(submission);
+          break;
         }
       }
+      window.submissions.push(submission);
       console.log("update received");
       console.log(window.submissions);
       return buildPage();
     });
-    socket.on('error', function(data) {
-      console.error("Error received: ");
-      console.error(data);
-      return alert("An error occurred. Please reload.");
+    socket.on('created', function(submission) {
+      var s, _i, _len, _ref;
+      _ref = window.submissions;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        s = _ref[_i];
+        if (s.id === submission.id) {
+          window.submissions.splice(window.submissions.indexOf(s), 1);
+          break;
+        }
+      }
+      window.submissions.push(submission);
+      window.created[submission.id] = true;
+      window.localStorage['created'] = JSON.stringify(window.created);
+      console.log("created received");
+      console.log(window.submissions);
+      return buildPage();
+    });
+    socket.on('remove', function(submission) {
+      var s, _i, _len, _ref;
+      _ref = window.submissions;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        s = _ref[_i];
+        if (s.id === submission.id) {
+          window.submissions.splice(window.submissions.indexOf(s), 1);
+          break;
+        }
+      }
+      console.log("remove received");
+      console.log(window.submissions);
+      return buildPage();
     });
     buildPage = function() {
       var submission, _i, _len, _ref;
@@ -67,7 +95,7 @@
       return window.createCallbacks();
     };
     buildRow = function(submission) {
-      var downvoted_selected_string, upvoted_selected_string;
+      var downvoted_selected_string, remove_string, upvoted_selected_string;
       upvoted_selected_string = "";
       downvoted_selected_string = "";
       if ((window.votes[submission.id] != null) && window.votes[submission.id] > 0) {
@@ -75,7 +103,11 @@
       } else if ((window.votes[submission.id] != null) && window.votes[submission.id] < 0) {
         downvoted_selected_string = " selected";
       }
-      return "<li id='" + submission.id + "' class=\"submission-row\">\n<div class=\"arrows\">\n  <div class='up-arrow" + upvoted_selected_string + "'></div>\n<div class=\"score\">" + (submission.upvotes - submission.downvotes) + "</div>\n<div class='down-arrow" + downvoted_selected_string + "'></div>\n</div>\n<div class=\"submission-title\">" + submission.title + "</div>\n</li>";
+      remove_string = "";
+      if (window.created[submission.id] != null) {
+        remove_string = "<div class=\"remove\">x</div>";
+      }
+      return "<li id='" + submission.id + "' class=\"submission-row\">" + remove_string + "<div class=\"arrows\">\n  <div class='up-arrow" + upvoted_selected_string + "'></div>\n<div class=\"score\">" + (submission.upvotes - submission.downvotes) + "</div>\n<div class='down-arrow" + downvoted_selected_string + "'></div>\n</div>\n<div class=\"submission-title\">" + submission.title + "</div>\n</li>";
     };
     deupvote = function(submission) {
       return socket.emit('deupvote', submission);
@@ -98,6 +130,10 @@
       window.votes[submission.id] = -1;
       window.localStorage['votes'] = JSON.stringify(window.votes);
       return socket.emit('downvote', submission);
+    };
+    window.remove = function(submission) {
+      window.created[submission.id] = void 0;
+      return socket.emit('remove', submission);
     };
     return window.submit = function(submission_title) {
       return socket.emit('submit', {

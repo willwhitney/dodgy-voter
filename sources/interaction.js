@@ -12,12 +12,24 @@
         window.votes = {};
       }
     }
+    window.created = window.localStorage['created'];
+    if (!(window.created != null)) {
+      window.created = {};
+    } else {
+      try {
+        window.created = JSON.parse(window.created);
+      } catch (e) {
+        window.created = {};
+      }
+    }
     window.submitAction = function() {
-      return window.submit($('#submission-box').val());
+      window.submit($('#submission-box').val());
+      return $('#submission-box').val("");
     };
     return window.createCallbacks = function() {
       $('.up-arrow').off("click");
       $('.down-arrow').off("click");
+      $('.remove').off("click");
       $('.up-arrow').click(function(e) {
         var s, voted_id, _i, _len, _ref;
         if (window.vote_lock) {
@@ -26,11 +38,12 @@
         voted_id = parseInt($(this).closest('.submission-row').attr('id'), 10);
         if (window.votes[voted_id] > 0) {
           return alert("You've already upvoted this.");
+        } else if (window.created[voted_id] != null) {
+          return alert("You created this post.");
         } else {
           _ref = window.submissions;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             s = _ref[_i];
-            console.log(s);
             if (s.id === voted_id) {
               console.log("Upvoting: ");
               console.log(s);
@@ -40,7 +53,7 @@
           }
         }
       });
-      return $('.down-arrow').click(function(e) {
+      $('.down-arrow').click(function(e) {
         var s, voted_id, _i, _len, _ref;
         if (window.vote_lock) {
           return;
@@ -48,17 +61,33 @@
         voted_id = parseInt($(this).closest('.submission-row').attr('id'), 10);
         if (window.votes[voted_id] < 0) {
           return alert("You've already downvoted this.");
+        } else if (window.created[voted_id] != null) {
+          return alert("You created this post.");
         } else {
           _ref = window.submissions;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             s = _ref[_i];
-            console.log(s);
             if (s.id === voted_id) {
               console.log("Downvoting: ");
               console.log(s);
               window.downvote(s);
               return;
             }
+          }
+        }
+      });
+      return $('.remove').click(function(e) {
+        var remove_id, s, _i, _len, _ref;
+        remove_id = parseInt($(this).closest('.submission-row').attr('id'), 10);
+        console.log("remove clicked for " + remove_id);
+        _ref = window.submissions;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          s = _ref[_i];
+          if (s.id === remove_id) {
+            console.log("Removing: ");
+            console.log(s);
+            window.remove(s);
+            return;
           }
         }
       });
