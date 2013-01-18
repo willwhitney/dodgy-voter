@@ -8,6 +8,10 @@ server = require('http').createServer(app)
 
 port = process.env.PORT || 8000
 io = io.listen server, { log: true }
+io.configure ->
+  io.set("transports", ["xhr-polling"])
+  io.set("polling duration", 10)
+  
 server.listen port
 
 submissions = [{id: 0, title: "F1!RST!!!", upvotes: 3, downvotes: 1}]
