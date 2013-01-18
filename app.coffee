@@ -6,7 +6,7 @@ io = require 'socket.io'
 app = express()
 server = require('http').createServer(app)
 
-port = 8000
+port = process.env.PORT || 8000
 io = io.listen server, { log: true }
 server.listen port
 

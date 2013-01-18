@@ -2,8 +2,13 @@
 	"name": "dodgy-voter",
 	"version": "0.0.1",
 	"dependencies": {
+    "coffee-script": ">= 1.1.2",
 		"socket.io": "",
 		"express": "",
 		"less-middleware": ""
-	}
+	},
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  }
 }
